@@ -9,6 +9,6 @@ São 3 semanas de desafio, sendo:
 Em cada semana, tem um board do trello pra seguir, seguindo modelo kanban.
 
 # Status do projeto:
-[ ] - Semana 1: CRUD de despesas e receitas  
+[X] - Semana 1: CRUD de despesas e receitas  
 [ ] - Semana 2: ...  
 [ ] - Semana 3: ...  

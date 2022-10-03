@@ -32,6 +32,8 @@ class DespesasController {
 
         try {
 
+            if (!newExpense.descricao || !newExpense.valor || !newExpense.data) return res.status(400).send("Todas as informações precisam estar preenchidas (descricao, valor e data)");
+
             const existExpense = await database.Despesas.findOne( {
                 where: {
                     descricao: newExpense.descricao,
@@ -39,7 +41,7 @@ class DespesasController {
                 }}
             );
 
-            if (existExpense) return res.status(409).send("Despesa já foi cadastrada anteriormente");
+            if (existExpense) return res.status(422).send("Despesa já foi cadastrada anteriormente");
 
             const newExpenseCreated = await database.Despesas.create(newExpense);
             console.log(`Nova despesa criada com id ${newExpenseCreated.id}`)

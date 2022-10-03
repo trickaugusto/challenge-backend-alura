@@ -32,6 +32,8 @@ class ReceitaController {
 
         try {
 
+            if (!newRecipe.descricao || !newRecipe.valor || !newRecipe.data) return res.status(400).send("Todas as informações precisam estar preenchidas (descricao, valor e data)");
+
             const existRecipe = await database.Receitas.findOne( {
                 where: {
                     descricao: newRecipe.descricao,
@@ -39,7 +41,7 @@ class ReceitaController {
                 }}
             );
 
-            if (existRecipe) return res.status(409).send("Receita já foi cadastrada anteriormente");
+            if (existRecipe) return res.status(422).send("Receita já foi cadastrada anteriormente");
 
             const newRecipeCreated = await database.Receitas.create(newRecipe);
             console.log(`Nova receita criada com id ${newRecipeCreated.id}`)
