@@ -10,5 +10,8 @@ Em cada semana, tem um board do trello pra seguir, seguindo modelo kanban.
 
 # Status do projeto:
 [X] - Semana 1: CRUD de despesas e receitas  
-[ ] - Semana 2: ...  
+[ ] - Semana 2: ...
 [ ] - Semana 3: ...  
+
+# Desafios durante o processo
+Na semana 2, percebi que se eu continuasse usando as controllers, pra tudo, viraria bagunça. Então decidi dar atenção a modelar meus arquivos. Usei como base esse artigo -> https://medium.com/@stroklabs/como-organizar-e-estruturar-projetos-com-node-js-4845be004899

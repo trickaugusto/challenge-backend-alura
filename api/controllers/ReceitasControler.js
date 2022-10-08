@@ -1,50 +1,42 @@
 const { restart } = require('nodemon');
 const database = require('../models'); //vai pra pasta e procura o index
+const ReceitasService = require('../services/ReceitasService.js');
 
-class ReceitaController {
-    static async getAllRecipes(req, res) {
+class ReceitasController {
+    static async getAll(req, res) {
         try {
-            const allRecipes = await database.Receitas.findAll();
+            const response = await ReceitasService.getAll();
 
-            return res.status(200).json(allRecipes);
+            return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json(error.message);
         }
     }
 
-    static async getOneRecipe(req, res) {
+    static async getOne(req, res) {
         const { id } = req.params;
 
         try {
-            const recipe = await database.Receitas.findOne({ where: {id: Number(id)}});
+            const response = await ReceitasService.getOne(id);
 
-            if (!recipe) return res.status(404).send("Id não encontrado");
+            if (!response) return res.status(404).send("Id não encontrado");
 
-            return res.status(200).json(recipe);
+            return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json(error.message);
         }
-
     }
 
-    static async createRecipe(req, res) {
+    static async create(req, res) {
         const newRecipe = req.body;
 
         try {
 
-            if (!newRecipe.descricao || !newRecipe.valor || !newRecipe.data) return res.status(400).send("Todas as informações precisam estar preenchidas (descricao, valor e data)");
+            const response = await ReceitasService.create(newRecipe);
 
-            const existRecipe = await database.Receitas.findOne( {
-                where: {
-                    descricao: newRecipe.descricao,
-                    data: newRecipe.data
-                }}
-            );
+            if (response == 400) return res.status(400).send("Todas as informações precisam estar preenchidas (descricao, valor e data)");
 
-            if (existRecipe) return res.status(422).send("Receita já foi cadastrada anteriormente");
-
-            const newRecipeCreated = await database.Receitas.create(newRecipe);
-            console.log(`Nova receita criada com id ${newRecipeCreated.id}`)
+            if (response == 422) return res.status(422).send("Receita já foi cadastrada anteriormente");
 
             return res.status(201).send("Criado");
         } catch (error) {
@@ -52,14 +44,14 @@ class ReceitaController {
         }
     }
 
-    static async updateRecipe(req, res) {
+    static async update(req, res) {
         const { id } = req.params;
         const newInfo = req.body;
 
         try {
-            const update = await database.Receitas.update(newInfo, {where: {id: Number(id)}});
+            const response = await ReceitasService.update(id, newInfo);
 
-            if (update == 0) return res.status(400).send("Receita não encontrada");
+            if (response == 0) return res.status(400).send("Receita não encontrada");
 
             return res.status(204).send("Atualizado");
         } catch (error) {
@@ -67,13 +59,13 @@ class ReceitaController {
         }
     }
 
-    static async deleteRecipe(req, res) {
+    static async delete(req, res) {
         const { id } = req.params;
 
         try {
-            const result = await database.Receitas.destroy({where: {id: Number(id)}});
+            const response = await ReceitasService.delete(id);
 
-            if ( result == 0 ) return res.status(400).send("Receita não encontrada");
+            if ( response == 0 ) return res.status(400).send("Receita não encontrada");
 
             return res.status(204).send("Deletado");
         } catch (error) {
@@ -82,4 +74,4 @@ class ReceitaController {
     }
 }
 
-module.exports = ReceitaController;
+module.exports = ReceitasController;
