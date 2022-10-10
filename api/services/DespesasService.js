@@ -1,4 +1,5 @@
 const database = require('../models');
+const startsWithCapital = require('../../utils/startsWithCapital');
 
 class DespesasService {
     static async getAll() {
@@ -24,6 +25,8 @@ class DespesasService {
     static async create(newExpense) {
         try {
 
+            const typesCategory = ['alimentação', 'saúde', 'moradia', 'transporte', 'educação', 'lazer', 'imprevistos'];
+
             if (!newExpense.descricao || !newExpense.valor || !newExpense.data) return 400;
 
             const existExpense = await database.Despesas.findOne( {
@@ -34,6 +37,14 @@ class DespesasService {
             );
 
             if (existExpense) return 422;
+
+            const isValidCategory = typesCategory.indexOf(newExpense.categoria.toLowerCase());
+
+            if (!newExpense.categoria || isValidCategory < 0) {
+                newExpense.categoria = 'Outras';
+            } else {
+                newExpense.categoria = startsWithCapital(newExpense.categoria);
+            }
 
             const newExpenseCreated = await database.Despesas.create(newExpense);
             console.log(`Nova despesa criada com id ${newExpenseCreated.id}`)
