@@ -5,7 +5,7 @@ const DespesasService = require('../services/DespesasService.js');
 class DespesasController {
     static async getAll(req, res) {
         try {
-            const response = await DespesasService.getAll();
+            const response = await DespesasService.getAll(req);
 
             return res.status(200).json(response);
         } catch (error) {

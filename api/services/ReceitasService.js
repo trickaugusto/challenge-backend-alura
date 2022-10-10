@@ -2,10 +2,10 @@ const database = require('../models');
 
 class ReceitasService {
     static async getAll(req) {
-        const { descricao } = req.query;
+        const { description } = req.query;
 
         try {
-            if (descricao) return this.getAllByDescription(descricao);
+            if (description) return this.getAllByDescription(description);
 
             const allRecipes = await database.Receitas.findAll();
 
@@ -15,12 +15,12 @@ class ReceitasService {
         }
     }
 
-    static async getAllByDescription(descricao) {
+    static async getAllByDescription(description) {
         try {
             const { Op } = require("sequelize");
 
             // doc https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
-            const allRecipes = await database.Receitas.findAll({ where: { descricao: { [Op.substring]: descricao } } });
+            const allRecipes = await database.Receitas.findAll({ where: { descricao: { [Op.substring]: description } } });
 
             return allRecipes;
         } catch (error) {

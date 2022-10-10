@@ -2,13 +2,30 @@ const database = require('../models');
 const startsWithCapital = require('../../utils/startsWithCapital');
 
 class DespesasService {
-    static async getAll() {
+    static async getAll(req) {
+        const { description } = req.query;
+
         try {
+            if (description) return this.getAllByDescription(description);
+
             const allExpense = await database.Despesas.findAll();
 
             return allExpense;
         } catch (error) {
             throw new Error(`Erro ao pegar todas as despesas ${error.message}`);
+        }
+    }
+
+    static async getAllByDescription(description) {
+        try {
+            const { Op } = require("sequelize");
+
+            // doc https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+            const allExpense = await database.Despesas.findAll({ where: { descricao: { [Op.substring]: description } } });
+
+            return allExpense;
+        } catch (error) {
+            throw new Error(`Erro ao pegar todas as receitas: ${error.message}`);
         }
     }
 
