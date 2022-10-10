@@ -5,7 +5,7 @@ const ReceitasService = require('../services/ReceitasService.js');
 class ReceitasController {
     static async getAll(req, res) {
         try {
-            const response = await ReceitasService.getAll();
+            const response = await ReceitasService.getAll(req);
 
             return res.status(200).json(response);
         } catch (error) {
@@ -68,6 +68,16 @@ class ReceitasController {
             if ( response == 0 ) return res.status(400).send("Receita não encontrada");
 
             return res.status(204).send("Deletado");
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+    }
+
+    static async getWithDescription(req, res) {
+        try {
+            const { descricao } = req.params;
+
+            return res.status(200).send(descricao);
         } catch (error) {
             return res.status(500).json(error.message);
         }

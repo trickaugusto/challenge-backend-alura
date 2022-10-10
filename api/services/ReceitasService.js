@@ -1,9 +1,26 @@
 const database = require('../models');
 
 class ReceitasService {
-    static async getAll() {
+    static async getAll(req) {
+        const { descricao } = req.query;
+
         try {
+            if (descricao) return this.getAllByDescription(descricao);
+
             const allRecipes = await database.Receitas.findAll();
+
+            return allRecipes;
+        } catch (error) {
+            throw new Error(`Erro ao pegar todas as receitas: ${error.message}`);
+        }
+    }
+
+    static async getAllByDescription(descricao) {
+        try {
+            const { Op } = require("sequelize");
+
+            // doc https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+            const allRecipes = await database.Receitas.findAll({ where: { descricao: { [Op.substring]: descricao } } });
 
             return allRecipes;
         } catch (error) {
